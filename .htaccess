@@ -1,0 +1,21 @@
+Options -Indexes
+DirectoryIndex index.php
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteRule ^(data|tools)(/|$) - [F,L]
+RewriteRule ^lib\.php$ - [F,L]
+RewriteRule ^social/raw/ - [F,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^social/([0-9]{3}|og|profile|fb_cover|li_banner)\.jpg$ social/compose.php?n=$1 [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^files/og\.jpg$ social/compose.php?n=og [L]
+<FilesMatch "\.pdf$">
+  Header set Content-Disposition "inline; filename=\"Owners-Guide-to-Selling-Your-Business.pdf\""
+</FilesMatch>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 7 days"
+  ExpiresByType application/pdf "access plus 1 day"
+</IfModule>
